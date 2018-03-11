@@ -198,6 +198,14 @@ class Visuvalization:
                     # add point to visuvalize
                     self.visuvalize(self.data_pos[i], predicted_y)
 
+            regret = []
+            if test:
+                for i in range(len(self.data_lable)):
+                    y = self.feature_dict[int(self.data_lable[i])]
+                    x = self.data_features[i]
+                    regret.append(gradient.getLoss(x, y))
+                print 'Regret = ', np.mean(loss) - np.mean(regret)
+
             # print out results
             print 'mean loss', np.mean(loss)
             print 'percentage predicted right = ', float(count_loss) / len(self.data_lable)
