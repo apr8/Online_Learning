@@ -22,6 +22,8 @@ class Softmax:
 
     def getLoss(self, x, y):
 
+        self.computeProb(x)
+
         correct_logprob = -np.log(self.probs[y])
         #print correct_logprob, self.probs[y]
         return correct_logprob
