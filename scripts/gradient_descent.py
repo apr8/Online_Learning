@@ -24,7 +24,12 @@ class GradientDescent:
         # get squared loss
         y_new = self.oneVsAllY(y)
 
+        # now update the weights
+        x = np.reshape(x, (int(len(x)), 1))
+
         loss = 0.5 * np.square((np.dot((self.weight), x) - y_new))
+
+        #print np.dot(self.weight, x) - y_new
         return loss
 
     def update(self, x, y):
