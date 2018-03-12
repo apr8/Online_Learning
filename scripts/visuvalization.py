@@ -5,6 +5,7 @@ import vtk
 import gradient_descent as gd
 import softmax_classifier as sm
 import bayesian_linear_regression as blr
+import matplotlib.pyplot as plt
 
 data_path_tr = '../data/oakland_part3_am_rf.node_features'
 data_path_te = '../data/oakland_part3_an_rf.node_features'
@@ -203,9 +204,21 @@ class Visuvalization:
                 for i in range(len(self.data_lable)):
                     y = self.feature_dict[int(self.data_lable[i])]
                     x = self.data_features[i]
-                    regret.append(gradient.getLoss(x, y))
-                print 'Regret = ', np.mean(loss) - np.mean(regret)
+                    regret.append(np.mean(gradient.getLoss(x, y)))
 
+                for  i in range(len(self.data_lable)):
+                    y = self.feature_dict[int(self.data_lable[i])]
+                    x = self.data_features[i]
+                    gradient.update(x, y)
+                    #print regret[i], gradient.getLoss(x, y)
+                    regret[i] = regret[i] - np.mean(gradient.getLoss(x, y))
+                    #regret[i] = regret[i].tolist()
+                    #print regret[i], type(regret[i])
+
+                print "regret = ", np.mean(regret, axis = 0)
+
+                plt.plot(regret)
+                plt.show()
             # print out results
             print 'mean loss', np.mean(loss)
             print 'percentage predicted right = ', float(count_loss) / len(self.data_lable)
@@ -225,7 +238,7 @@ class Visuvalization:
         # TODO: for now hard coded the shape
         gradient = gd.GradientDescent(self.data_features[0].shape[0], 5)
 
-        self.iterateOverData(gradient, 7, False, False, [])
+        self.iterateOverData(gradient, 1, False, False, [])
 
         # set the data path to test
         self.dataFile = open(data_path_te, "r")
@@ -244,7 +257,7 @@ class Visuvalization:
         # TODO: for now hard coded the shape
         gradient = sm.Softmax(self.data_features[0].shape[0], 5)
 
-        self.iterateOverData(gradient, 40, False, False, [])
+        self.iterateOverData(gradient, 2, False, False, [])
 
         # set the data path to test
         self.dataFile = open(data_path_te, "r")
