@@ -200,20 +200,25 @@ class Visuvalization:
                     self.visuvalize(self.data_pos[i], predicted_y)
 
             regret = []
+            c = 0
             if test:
                 for i in range(len(self.data_lable)):
                     y = self.feature_dict[int(self.data_lable[i])]
+                    if class_list:
+                        if y not in class_list:
+                            continue
                     x = self.data_features[i]
                     regret.append(np.mean(gradient.getLoss(x, y)))
 
-                for  i in range(len(self.data_lable)):
-                    y = self.feature_dict[int(self.data_lable[i])]
-                    x = self.data_features[i]
+                    #for  i in range(len(self.data_lable)):
+                    #y = self.feature_dict[int(self.data_lable[i])]
+                    #x = self.data_features[i]
                     gradient.update(x, y)
                     #print regret[i], gradient.getLoss(x, y)
-                    regret[i] = regret[i] - np.mean(gradient.getLoss(x, y))
-                    #regret[i] = regret[i].tolist()
-                    #print regret[i], type(regret[i])
+                    regret[c] = regret[c] - np.mean(gradient.getLoss(x, y))
+                    #regret[i] = sum(regret[:i])
+                    regret[c] = np.mean(regret[:i+1])
+                    c += 1
 
                 print "regret = ", np.mean(regret, axis = 0)
 
@@ -238,7 +243,7 @@ class Visuvalization:
         # TODO: for now hard coded the shape
         gradient = gd.GradientDescent(self.data_features[0].shape[0], 5)
 
-        self.iterateOverData(gradient, 1, False, False, [])
+        self.iterateOverData(gradient, 7, False, False, [])
 
         # set the data path to test
         self.dataFile = open(data_path_te, "r")
